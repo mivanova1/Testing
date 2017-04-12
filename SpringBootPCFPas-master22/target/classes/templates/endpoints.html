@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Boot JPA Bootstrap Employees Page</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+        #map{ width:700px; height: 400px; }
+
+        .space-left {
+            margin-left: 20px;
+        }
+    </style>
+
+    <link rel="stylesheet" th:href="@{themes/bootstrap-darkly.css}" media="screen" />
+    <link rel="stylesheet" th:href="@{themes/custom-darkly.min.css}" />
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/r/bs-3.3.5/jqc-1.11.3,dt-1.10.8/datatables.min.js"></script>
+
+    <link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            $('#example').DataTable();
+        } );
+    </script>
+
+</head>
+<body>
+<div class="navbar navbar-default">
+    <div class="container" >
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="navbar-brand" href="http://run.pivotal.io/">
+                        <img src="images/spring-new-icon.png"
+                             th:src="@{images/spring-new-icon.png}"
+                             alt="Pivotal" width="28" height="28"
+                             border="0"/>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a th:href="@{/endpoints}">
+                                <img src="images/b_props.png"
+                                     th:src="@{images/b_props.png}"
+                                     alt="Endpoints"
+                                     border="0"/>
+                                Endpoints
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">
+                        [Service: <span th:text="${dbservice}"></span> - App Index: <span th:text="${appIndex}"></span>]
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/}">
+                        <img src="images/b_home.png"
+                             th:src="@{images/b_home.png}"
+                             alt="Home" width="28" height="28"
+                             border="0"/>
+                        Home
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="space-left bs-example">
+    <div class="page-header">
+        <h1>Spring Boot JPA Bootstrap <small>Endpoints</small></h1>
+    </div>
+</div>
+
+<div class="container">
+    <!--Row with two columns divided in 1:2 ratio-->
+    <div class="row">
+        <div class="col-xs-8">
+            <div>
+                <p>
+                    VCAP_SERVICES, VCAP_APPLICATION will only be valid within Cloud Foundry
+                </p>
+                <small>by <cite>Pas Apicella</cite></small>
+                <p />
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">JVM PROPERTIES</a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table class="table table-hover table-bordered table-striped table-condensed">
+                                    <div th:each="item : ${propertyMap}">
+                                        <tr>
+                                            <td><span th:text="${item.key}" /></td>
+                                            <td><span th:text="${item.value}" /></td>
+                                        </tr>
+                                    </div>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">VCAP_SERVICES</a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table class="table table-hover table-bordered table-striped table-condensed">
+                                    <div th:each="item : ${vcapServices}">
+                                        <tr>
+                                            <td><span th:text="${item.key}" /></td>
+                                            <td><span th:text="${item.value}" /></td>
+                                        </tr>
+                                    </div>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">VCAP_APPLICATION</a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table class="table table-hover table-bordered table-striped table-condensed">
+                                    <div th:each="item : ${vcapApplication}">
+                                        <tr>
+                                            <td><span th:text="${item.key}" /></td>
+                                            <td><span th:text="${item.value}" /></td>
+                                        </tr>
+                                    </div>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Note:</strong> Click on the linked heading text to expand or collapse</p>
+        </div>
+        <div class="col-xs-4">
+            <div>
+                <p>
+                    Endpoints for REST and ACTUATOR as per below
+                </p>
+                <small>by <cite>Pas Apicella</cite></small>
+            </div>
+
+            <div>
+                <h4> REST </h4>
+                <ul>
+                    <li><a href="/emps" target="_new">View All Employees</a> </li>
+                    <li><a href="/emp/1" target="_new">View Employee with ID 2 </a> </li>
+                    <li><a href="/empwithjob/CLERK" target="_new">View Employees with JOB = CLERK</a> </li>
+                </ul>
+
+                <h4> ACTUATOR </h4>
+
+                <ul>
+                    <li><a href="/env" target="_new">Environment for shell/JVM</a> </li>
+                    <li><a href="/beans" target="_new">Spring Context Beans</a> </li>
+                    <li><a href="/autoconfig" target="_new">auto-configuration</a> </li>
+                    <li><a href="/mappings" target="_new">URI request mappings</a> </li>
+                    <li><a href="/trace" target="_new">Displays trace information</a> </li>
+                    <li><a href="/dump" target="_new">Performs Thread Dump</a> </li>
+                    <li><a href="/metrics" target="_new">Display Metrics</a> </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix">
+</div>
+
+<div th:include="footer :: copy"></div>
+
+</body>
+</html>
